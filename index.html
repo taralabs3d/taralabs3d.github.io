@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TaraLabs — Shopee Store Management for TaraLabs.3D</title>
+<meta name="description" content="TaraLabs is an internal seller tool that integrates with the Shopee Open Platform to manage the catalog, stock, pricing, and orders of the TaraLabs.3D store (3D-printed products).">
+<style>
+  :root{
+    --bg:#0b0f1a; --bg2:#121829; --card:#161d31; --line:#243049;
+    --txt:#e7ecf5; --muted:#9aa7c2; --accent:#2fa8ff; --accent2:#16e0c8;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:radial-gradient(1200px 600px at 70% -10%,rgba(47,168,255,.18),transparent),
+               radial-gradient(900px 500px at 10% 10%,rgba(22,224,200,.10),transparent),
+               var(--bg);
+    color:var(--txt);line-height:1.6;-webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1040px;margin:0 auto;padding:0 22px}
+  header{display:flex;align-items:center;justify-content:space-between;padding:22px 0}
+  .brand{display:flex;align-items:center;gap:12px;font-weight:800;letter-spacing:.5px}
+  .logo{
+    width:40px;height:40px;border-radius:10px;display:grid;place-items:center;
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+    color:#03121f;font-weight:900;font-size:13px;box-shadow:0 6px 22px rgba(47,168,255,.35)
+  }
+  .brand span b{color:var(--accent2)}
+  nav a{color:var(--muted);text-decoration:none;margin-left:22px;font-size:14px}
+  nav a:hover{color:var(--txt)}
+
+  .hero{padding:70px 0 50px;text-align:center}
+  .pill{display:inline-block;font-size:12px;letter-spacing:1px;text-transform:uppercase;
+    color:var(--accent);border:1px solid var(--line);border-radius:999px;padding:6px 14px;margin-bottom:22px}
+  .hero h1{font-size:clamp(30px,5vw,52px);line-height:1.1;font-weight:800;margin-bottom:18px}
+  .hero h1 em{font-style:normal;background:linear-gradient(90deg,var(--accent),var(--accent2));
+    -webkit-background-clip:text;background-clip:text;color:transparent}
+  .hero p{color:var(--muted);font-size:18px;max-width:680px;margin:0 auto 30px}
+  .cta{display:inline-flex;gap:12px;flex-wrap:wrap;justify-content:center}
+  .btn{padding:13px 24px;border-radius:11px;text-decoration:none;font-weight:700;font-size:15px;display:inline-block}
+  .btn.primary{background:linear-gradient(135deg,var(--accent),#1b86e0);color:#fff;box-shadow:0 8px 26px rgba(47,168,255,.35)}
+  .btn.ghost{border:1px solid var(--line);color:var(--txt)}
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:18px;margin:40px 0}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:24px}
+  .card .ico{font-size:24px;margin-bottom:12px}
+  .card h3{font-size:17px;margin-bottom:8px}
+  .card p{color:var(--muted);font-size:14px}
+
+  section.block{padding:54px 0;border-top:1px solid var(--line)}
+  section.block h2{font-size:26px;margin-bottom:10px}
+  section.block .lead{color:var(--muted);max-width:760px;margin-bottom:24px}
+
+  .steps{counter-reset:s;display:grid;gap:14px}
+  .step{display:flex;gap:16px;align-items:flex-start;background:var(--bg2);border:1px solid var(--line);border-radius:14px;padding:18px}
+  .step::before{counter-increment:s;content:counter(s);min-width:34px;height:34px;border-radius:9px;
+    background:linear-gradient(135deg,var(--accent),var(--accent2));color:#03121f;font-weight:900;display:grid;place-items:center}
+  .step b{display:block;margin-bottom:2px}
+  .step p{color:var(--muted);font-size:14px}
+
+  .contact{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:32px;text-align:center;margin:30px 0}
+  .contact a{color:var(--accent);text-decoration:none}
+
+  footer{border-top:1px solid var(--line);padding:28px 0;color:var(--muted);font-size:13px;
+    display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+  .note{font-size:12px;color:var(--muted);text-align:center;margin-top:8px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="brand">
+      <div class="logo">T3D</div>
+      <span>TaraLabs<b>.3D</b></span>
+    </div>
+    <nav>
+      <a href="#about">About</a>
+      <a href="#features">Features</a>
+      <a href="#how">How it works</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <span class="pill">Shopee Open Platform Integration</span>
+    <h1>Store management for <em>3D-printed products</em></h1>
+    <p>TaraLabs is the internal seller tool for our own Shopee shop <strong>TaraLabs.3D</strong>.
+       It connects to the Shopee Open Platform to manage our catalog, stock, pricing, and orders —
+       synchronized with a simple spreadsheet dashboard.</p>
+    <div class="cta">
+      <a class="btn primary" href="#features">Explore features</a>
+      <a class="btn ghost" href="#contact">Contact us</a>
+    </div>
+  </section>
+
+  <div class="grid" id="features">
+    <div class="card"><div class="ico">📦</div><h3>Product Sync</h3>
+      <p>Pull the full product list from Shopee and create or update listings directly from our catalog sheet.</p></div>
+    <div class="card"><div class="ico">🏷️</div><h3>Stock &amp; Price</h3>
+      <p>Keep stock levels and prices accurate across all variations with one-click updates.</p></div>
+    <div class="card"><div class="ico">🧾</div><h3>Order Monitoring</h3>
+      <p>Review incoming orders and fulfillment status for made-to-order 3D-printed items.</p></div>
+    <div class="card"><div class="ico">📊</div><h3>Sheet Dashboard</h3>
+      <p>All data mirrored into a Google Sheets dashboard for fast, no-code management.</p></div>
+  </div>
+
+  <section class="block" id="about">
+    <h2>About TaraLabs.3D</h2>
+    <p class="lead">
+      TaraLabs.3D is a small Indonesian store specializing in 3D-printed products — articulated figures,
+      anime collectibles, home decor, custom keychains, and made-to-order prints. As our catalog grows,
+      we built <strong>TaraLabs</strong>, an internal tool that talks to the Shopee Open Platform API so we
+      can manage listings, stock, pricing, and orders more efficiently. This application is used solely by
+      our own shop and is not distributed to or used by any other merchants.
+    </p>
+  </section>
+
+  <section class="block" id="how">
+    <h2>How it works</h2>
+    <p class="lead">A lightweight, secure integration with the Shopee Open Platform.</p>
+    <div class="steps">
+      <div class="step"><div><b>Authorize</b><p>The shop owner authorizes the app through Shopee’s official OAuth flow.</p></div></div>
+      <div class="step"><div><b>Sync</b><p>The app reads products and orders from Shopee using the official API v2 endpoints.</p></div></div>
+      <div class="step"><div><b>Manage</b><p>Edits made in our spreadsheet dashboard are pushed back to Shopee — stock, price, and listings.</p></div></div>
+      <div class="step"><div><b>Monitor</b><p>Orders and inventory stay in sync so nothing is oversold or missed.</p></div></div>
+    </div>
+  </section>
+
+  <section class="block" id="contact">
+    <h2>Contact</h2>
+    <div class="contact">
+      <p>For any questions regarding this application:</p>
+      <p style="margin-top:8px;font-size:18px"><a href="mailto:taralabs.3d@gmail.com">taralabs.3d@gmail.com</a></p>
+      <p class="note">TaraLabs.3D · Indonesia · Shopee Seller</p>
+    </div>
+  </section>
+
+  <footer>
+    <span>© 2026 TaraLabs.3D — Internal Shopee integration.</span>
+    <span>Powered by Shopee Open Platform</span>
+  </footer>
+
+</div>
+</body>
+</html>
