@@ -70,8 +70,8 @@ const CONFIG = {
   brightness: 0.44,               // <-- kenop terang-gelap render: 1.0 = terang penuh, coba 0.7–0.9
   priceFirstBlock: 23000,        // <-- harga blok/huruf pertama
   priceNextBlock: 6000,          // <-- tambahan harga per blok berikutnya
-  shopeeUrl: 'https://shopee.co.id/GANTI_DENGAN_LINK_TOKO',   // <-- link listing Shopee
-  waNumber: 'GANTI_NOMOR_WA',    // format 628xxxxxxxxxx tanpa +
+  shopeeUrl: 'https://s.shopee.co.id/LllKzLbFK',   // link listing Shopee
+  waNumber: '6282229415272',     // format 628xxxxxxxxxx tanpa +
   layout: {
     pitch: 27,          // jarak antar blok (mm) — silakan fine-tune
     capsOffset: { x: -4.08, y: 9.438 },  // posisi keycap di atas base (dari file Assembly)
