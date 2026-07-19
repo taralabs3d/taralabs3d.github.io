@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Fidget Clicker Custom Nama — TaraLabs.3D</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧩</text></svg>">
+<style>
+  :root {
+    --bg: #FDF3F6;
+    --card: #FFFFFF;
+    --ink: #4A3B44;
+    --muted: #9B8A93;
+    --accent: #E9578C;
+    --accent-soft: #FBE3EC;
+    --field: #FFF9FB;
+    --chip: #F3E6EC;
+    --hint: #9B8A93;
+    --viewer-a: #FFEDF3;
+    --viewer-b: #EDF4FF;
+    --radius: 16px;
+    --shadow: 0 4px 16px rgba(180, 120, 150, .14);
+  }
+  body[data-theme="dark"] {
+    --bg: #17161C;
+    --card: #242229;
+    --ink: #ECE6EC;
+    --muted: #9A92A2;
+    --accent-soft: #3B2F3A;
+    --field: #2C2932;
+    --chip: #332F3C;
+    --hint: rgba(255,255,255,.55);
+    --viewer-a: #332B3A;
+    --viewer-b: #1E2230;
+    --shadow: 0 4px 16px rgba(0, 0, 0, .35);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg); color: var(--ink);
+    display: flex; flex-direction: column;
+    overscroll-behavior: none;
+  }
+  header {
+    padding: 10px 16px 6px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  #btn-theme {
+    margin-left: auto; border: none; background: var(--chip);
+    width: 32px; height: 32px; border-radius: 50%;
+    font-size: 15px; cursor: pointer;
+  }
+  header h1 { font-size: 17px; letter-spacing: .3px; }
+  header h1 .brand { color: var(--accent); }
+  header .sub { font-size: 11px; color: var(--muted); }
+
+  #viewer {
+    position: relative;
+    height: 44vh; min-height: 260px;
+    transition: height .3s ease;
+    margin: 0 12px; border-radius: var(--radius);
+    background: linear-gradient(160deg, var(--viewer-a), var(--viewer-b));
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    touch-action: none;
+  }
+  #viewer.tall { height: 58vh; }  /* mode vertikal: kotak preview lebih panjang ke bawah */
+  #viewer canvas { display: block; }
+  #viewer .hint {
+    position: absolute; bottom: 8px; left: 0; right: 0;
+    text-align: center; font-size: 11px; color: var(--hint);
+    pointer-events: none;
+  }
+  #price {
+    position: absolute; top: 10px; right: 12px;
+    background: rgba(255,255,255,.9); backdrop-filter: blur(4px);
+    padding: 6px 12px; border-radius: 999px;
+    font-size: 13px; font-weight: 700; color: var(--accent);
+    box-shadow: var(--shadow);
+  }
+  #btn-shot, #btn-resetcam {
+    position: absolute; top: 10px; left: 12px;
+    background: rgba(255,255,255,.9); border: none;
+    width: 34px; height: 34px; border-radius: 50%;
+    font-size: 16px; cursor: pointer; box-shadow: var(--shadow);
+  }
+  #btn-resetcam { top: 52px; }
+
+  nav#steps {
+    display: flex; gap: 6px; padding: 12px 12px 4px;
+  }
+  nav#steps button {
+    flex: 1; border: none; border-radius: 999px;
+    padding: 8px 4px; font-size: 12px; font-weight: 600;
+    background: var(--chip); color: var(--muted); cursor: pointer;
+    transition: all .15s;
+  }
+  nav#steps button.active { background: var(--accent); color: #fff; }
+
+  main {
+    flex: 1; overflow-y: auto;
+    padding: 10px 12px calc(20px + env(safe-area-inset-bottom));
+  }
+  .panel { display: none; }
+  .panel.active { display: block; animation: fadein .2s; }
+  @keyframes fadein { from { opacity: 0; transform: translateY(6px); } }
+
+  .card {
+    background: var(--card); border-radius: var(--radius);
+    padding: 14px; box-shadow: var(--shadow); margin-bottom: 10px;
+  }
+  .card h3 { font-size: 13px; margin-bottom: 8px; color: var(--ink); }
+  .card .note { font-size: 11px; color: var(--muted); margin-top: 6px; }
+
+  #name-input {
+    width: 100%; font-size: 22px; font-weight: 700; letter-spacing: 4px;
+    padding: 10px 14px; border: 2px solid var(--accent-soft);
+    border-radius: 12px; outline: none; text-transform: uppercase;
+    color: var(--ink); background: var(--field);
+  }
+  #name-input:focus { border-color: var(--accent); }
+
+  #blocks-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+  .block-chip {
+    display: flex; align-items: center; gap: 4px;
+    background: var(--accent-soft); border-radius: 10px;
+    padding: 5px 8px; font-weight: 700; font-size: 15px;
+    border: 2px solid transparent; cursor: pointer;
+  }
+  .block-chip.selected { border-color: var(--accent); background: var(--card); }
+  .block-chip .x { font-size: 11px; color: var(--muted); padding: 0 2px; }
+
+  #symbols-row { display: flex; flex-wrap: wrap; gap: 6px; }
+  #symbols-row button {
+    font-size: 20px; background: var(--field); border: 1.5px solid var(--accent-soft);
+    border-radius: 10px; width: 42px; height: 42px; cursor: pointer;
+  }
+  #symbols-row button:active { transform: scale(.92); }
+
+  .preset-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .preset-card {
+    border: 2px solid var(--accent-soft); border-radius: 12px;
+    padding: 10px; cursor: pointer; background: var(--field);
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .preset-card.active { border-color: var(--accent); }
+  .preset-card .pname { font-size: 12px; font-weight: 700; }
+  .preset-card .dots { display: flex; gap: 3px; align-items: center; }
+  .preset-card .dots i {
+    width: 16px; height: 16px; border-radius: 5px; display: block;
+    border: 1px solid rgba(0,0,0,.08);
+  }
+  .preset-card .dots b {
+    font-size: 14px; font-weight: 900; line-height: 16px; margin-left: 3px;
+    text-shadow: 0 0 2px rgba(0,0,0,.4), 0 0 3px rgba(255,255,255,.45);
+  }
+
+  .swatch-row { margin-bottom: 12px; }
+  .swatch-row .lbl {
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 12px; font-weight: 700; margin-bottom: 6px;
+  }
+  .swatch-row .lbl button {
+    font-size: 10px; border: none; background: var(--accent-soft);
+    color: var(--accent); font-weight: 700;
+    padding: 4px 8px; border-radius: 999px; cursor: pointer;
+  }
+  .swatches { display: flex; flex-wrap: wrap; gap: 7px; }
+  .swatches i {
+    width: 30px; height: 30px; border-radius: 9px; display: block;
+    border: 2px solid rgba(0,0,0,.1); cursor: pointer; position: relative;
+  }
+  .swatches i.on { border-color: var(--ink); transform: scale(1.12); }
+  .swatches i.on::after {
+    content: "✓"; position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-size: 13px; font-weight: 900;
+    text-shadow: 0 0 3px rgba(0,0,0,.55);
+  }
+
+  .row-btns { display: flex; gap: 8px; }
+  .btn {
+    flex: 1; border: none; border-radius: 12px; padding: 12px;
+    font-size: 14px; font-weight: 700; cursor: pointer;
+  }
+  .btn.primary { background: var(--accent); color: #fff; }
+  .btn.ghost { background: var(--accent-soft); color: var(--accent); }
+  .btn:active { transform: scale(.97); }
+
+  #order-code {
+    width: 100%; font-family: ui-monospace, Menlo, monospace; font-size: 11px;
+    background: var(--field); border: 1.5px dashed var(--accent);
+    border-radius: 10px; padding: 10px; white-space: pre-wrap;
+    color: var(--ink); margin-bottom: 10px;
+  }
+  ol.howto { padding-left: 18px; font-size: 12px; color: var(--muted); line-height: 1.7; }
+
+  #empty-hint { font-size: 12px; color: var(--muted); text-align: center; padding: 16px 0; }
+  #toast {
+    position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%) translateY(80px);
+    background: #3A3340; color: #fff; padding: 10px 18px;
+    border-radius: 999px; font-size: 13px; transition: transform .25s;
+    z-index: 50; pointer-events: none;
+  }
+  #toast.show { transform: translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+<header>
+  <h1>Fidget Clicker <span class="brand">Custom Nama</span></h1>
+  <span class="sub">by TaraLabs.3D</span>
+  <button id="btn-theme" title="Ganti tema">☀️</button>
+</header>
+
+<div id="viewer">
+  <div id="price">Rp 0</div>
+  <button id="btn-shot" title="Simpan gambar">📷</button>
+  <button id="btn-resetcam" title="Reset tampilan">🔄</button>
+  <div class="hint">1 jari memutar · cubit zoom · 2 jari menggeser · tap blok untuk pilih · tap keycap untuk klik!</div>
+</div>
+
+<nav id="steps">
+  <button data-step="nama" class="active">1 · Nama</button>
+  <button data-step="palet">2 · Palet</button>
+  <button data-step="warna">3 · Warna</button>
+  <button data-step="pesan">4 · Pesan</button>
+</nav>
+
+<main>
+  <!-- STEP 1: NAMA -->
+  <section class="panel active" id="panel-nama">
+    <div class="card">
+      <h3>Ketik nama kamu ✍️</h3>
+      <input id="name-input" type="text" autocomplete="off" spellcheck="false"
+             placeholder="MISAL: FAE" maxlength="24">
+      <div id="blocks-row"></div>
+      <div class="note">Maksimal 10 blok (huruf A–Z & angka 0–9). Tap blok untuk memilihnya, tap ✕ untuk hapus.</div>
+    </div>
+    <div class="card">
+      <h3>Tambah charm simbol ✨</h3>
+      <div id="symbols-row"></div>
+      <div class="note">Simbol dihitung 1 blok.</div>
+    </div>
+    <div class="card">
+      <h3>Posisi lobang gantungan 🔗</h3>
+      <div class="row-btns" id="orient-row">
+        <button class="btn ghost" data-orient="r">Kanan →</button>
+        <button class="btn ghost" data-orient="l">← Kiri</button>
+        <button class="btn ghost" data-orient="d">↓ Vertikal</button>
+      </div>
+      <div class="note">Vertikal: nama menggantung ke bawah, lobang di atas.</div>
+    </div>
+  </section>
+
+  <!-- STEP 2: PALET -->
+  <section class="panel" id="panel-palet">
+    <div class="card">
+      <h3>Pilih palet warna 🎨</h3>
+      <div class="preset-grid" id="preset-grid"></div>
+      <div class="note">Palet mengatur semua blok sekaligus. Mau ubah per blok? Lanjut ke step 3.</div>
+    </div>
+    <div class="card">
+      <div class="row-btns">
+        <button class="btn ghost" id="btn-random">🎲 Acak warna!</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- STEP 3: WARNA PER BLOK -->
+  <section class="panel" id="panel-warna">
+    <div class="card" id="block-editor">
+      <h3 id="editor-title">Pilih blok dulu</h3>
+      <div id="empty-hint">Tap salah satu blok di preview 3D di atas,<br>atau tap chip blok di step 1.</div>
+      <div id="editor-body" style="display:none">
+        <div class="swatch-row" data-layer="base">
+          <div class="lbl"><span>Warna Base</span><button data-copy="base">samakan semua base</button></div>
+          <div class="swatches"></div>
+        </div>
+        <div class="swatch-row" data-layer="cap">
+          <div class="lbl"><span>Warna Keycap</span><button data-copy="cap">samakan semua keycap</button></div>
+          <div class="swatches"></div>
+        </div>
+        <div class="swatch-row" data-layer="glyph">
+          <div class="lbl"><span>Warna Huruf</span><button data-copy="glyph">samakan semua huruf</button></div>
+          <div class="swatches"></div>
+        </div>
+        <div class="row-btns">
+          <button class="btn ghost" id="btn-copy-block">📋 Terapkan kombinasi ini ke semua blok</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STEP 4: PESAN -->
+  <section class="panel" id="panel-pesan">
+    <div class="card">
+      <h3>Ringkasan pesanan 🧾</h3>
+      <div id="order-code">—</div>
+      <div class="row-btns" style="margin-bottom:8px">
+        <button class="btn primary" id="btn-copy-code">📋 Salin Kode Pesanan</button>
+      </div>
+      <div class="row-btns">
+        <button class="btn ghost" id="btn-shopee">🛒 Buka Shopee</button>
+        <button class="btn ghost" id="btn-wa">💬 WhatsApp</button>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Cara pesan lewat Shopee 🛍️</h3>
+      <ol class="howto">
+        <li>Tap <b>Salin Kode Pesanan</b> di atas.</li>
+        <li>Buka listing produk di Shopee, pilih variasi sesuai <b>jumlah blok</b>.</li>
+        <li><b>Paste kode</b> ke kolom <i>catatan / pesan untuk penjual</i> saat checkout.</li>
+        <li>Selesai! Pesananmu dibuat persis seperti preview. 💖</li>
+      </ol>
+    </div>
+  </section>
+</main>
+
+<div id="toast"></div>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+  }
+}
+</script>
+<script type="module" src="app.js"></script>
+</body>
+</html>
